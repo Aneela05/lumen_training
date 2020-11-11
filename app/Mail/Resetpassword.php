@@ -13,9 +13,9 @@ class Resetpassword extends Mailable
 
     public $token;
 
-    public function __construct($query)
+    public function __construct($user)
     {
-        $this->token = $query->token;
+        $this->token = $user->token;
     }
 
     /**

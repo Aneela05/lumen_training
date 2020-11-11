@@ -39,8 +39,8 @@ class AdminController extends Controller
 
    
 
-    }
-public function delete($id){
+    
+    public function delete($id){
         // check whether the id exists in the database
         $user = User::findOrFail($id); 
 
@@ -58,6 +58,12 @@ public function delete($id){
                 ];      
         return $output;
 
+    }
+
+    public function searchfilters(Request $request){
+        
+        $admin= User::where('role',$request->input('role'))->get();
+        return $admin;
     }
 }
 //

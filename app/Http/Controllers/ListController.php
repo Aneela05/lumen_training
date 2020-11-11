@@ -17,14 +17,6 @@ class ListController extends Controller{
         $user->role=='admin';
     }
     public function show(){
-    //    return Auth::user(); //--gives the authenticated user if we uses  user token in the authorization 
-       //Auth::user()->where('role','admin')->get(); //if we use authenticated user's token it will give the list of users whos role is admin
-    //   $user= Auth::user()->where('role','admin')->first(); 
-    //   if($user){
-    //       $normal_list = User::where('role','normal')->get();
-    //       return $normal_list;
-    //   }
-
       if(Auth::user()->role=='admin'){
         $users_list = User::where('role','normal')->orWhere('role','admin')->get();
         return $users_list;
@@ -32,6 +24,16 @@ class ListController extends Controller{
       else{
           return Auth::user();
       }
+    }
+    
+    public function list($id){
+        if($id == Auth::id()){
+            $user = User::find($id);
+            return response()->json(['user'=>$user],200);
+        }
+        else {
+            return response()->json(['message'=>'Token invalid'],401);
+        }  
     }
 
     public function create(Request $request){
@@ -49,18 +51,12 @@ class ListController extends Controller{
             $user->token =$token;
             $user->verify_status='No';
             $user->created_by= Auth::user()->email;
-            $user->save();
-            // return response()->json(['message'=>'successfully created', 'created_by'=>Auth::user()->email],201);
+            $user->save(); 
         }
-        // else{
-        //     return response()->json(['message'=> 'normal user cant create the account beacuse you are not authorized' ],401);
-        // }
 
         Mail::to($request->email)->send(new Signupverify($user));
-        return response()->json(['message'=>'verify your mail!']);
-
         Mail::to($request->email)->send(new Createpassword($user));
-        return response()->json(['message'=>'link has been sent to your mail to create your password!']);
+        return response()->json(['message'=>'verify your mail!', 'user'=>$user]);
     }
  
     public function delete($id){
@@ -86,8 +82,29 @@ class ListController extends Controller{
                 response()->json(['message'=> 'unauthorized' ],401);
            }
         }
-
          
+    }
+
+    public function searchfilters(Request $request){
+        if(!Auth::user()){
+            return response()->json(['message'=>'login please']);
+        }
+       
+        $users = User::where('role','normal');
+       
+        if($request->has('name')){
+            $users->where('name','like','%'.$request->name.'%');
+        }
+        if($request->has('email')){
+            $users->where('email','like','%'.$request->email.'%');
+        }
+        if($request->has('token')){
+            $users->where('token',$request->token);
+        }
+        if($request->has('created_by')){
+            $users->where('created_by',$request->created_by);
+        }
+        return $users->get();
     }
 
 }

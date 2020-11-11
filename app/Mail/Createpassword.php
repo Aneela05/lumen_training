@@ -11,7 +11,7 @@ class Createpassword extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $token, $name;
+    public $token;
 
     public function __construct($user)
     {

@@ -9,22 +9,32 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Mail\Mailable;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
+class Task extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
 {
     use Authenticatable, Authorizable;
-
+    use SoftDeletes;
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
     protected $fillable = [
-        'name', 'email','role'
+        'title','description','duedate','assignee', 'status','user_id'
     ];
+    //defining the relationship on the the task model from the user.
+    public function user(){
+        return $this->belongsTo(User::class);
+    }
+    
+    public function assigneeUser(){
+        return $this->belongsTo(User::class, 'assignee');
+    }
 
+    
     /**
      * The attributes excluded from the model's JSON form.
      *
@@ -32,16 +42,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
 
     protected $hidden = [
-        'password','token'
+        
     ];
-    //user model can have any no of tasks.
-    public function tasks(){
-        return $this->hasMany(Task::class);
-    }
-    public function tasks1(){
-        return $this->hasMany(Task::class,'assignee');
-    }
-   
+
+
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -52,7 +56,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
-
+    
+    protected $table = "tasks";
     
 
 }

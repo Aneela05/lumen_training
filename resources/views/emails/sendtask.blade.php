@@ -6,6 +6,8 @@
     <title>Document</title>
 </head>
 <body>
-<p>localhost:8000/api/forgot?token=<?php echo $token; ?>&new_password=  </p>
+    <h2> your task has been assigned</h2>
+    <h3><?php echo "Title:".$task['TITLE'];?></h3>
+    <h3><?php echo "Details:".$task['description'];?></h3>
 </body>
 </html>

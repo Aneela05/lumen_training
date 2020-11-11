@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-    <p>localhost:8000/api/createpassword/token=<?php echo $token; ?>&New_password=  </p>
+    <p>localhost:8000/api/createpassword?token=<?php echo $token; ?>&new_password=  </p>
     
 </body>
 </html>

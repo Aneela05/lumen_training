@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateFtokenTable extends Migration
+class CreateTasksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class CreateFtokenTable extends Migration
      */
     public function up()
     {
-        Schema::create('ftoken', function (Blueprint $table) {
+        Schema::create('tasks', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('verificationCode')->unique()->notNullable();
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')
-                  ->references('id')
-                  ->on('users')
-                  ->onDelete('cascade');
+            $table->string('title');
+            $table->string('description');
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('assignee');
+            $table->string('status');
+            $table->timestamp('duedate');
             $table->softDeletes();
             $table->timestamps();
         });
@@ -33,6 +34,6 @@ class CreateFtokenTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ftoken');
+        Schema::dropIfExists('tasks');
     }
 }

@@ -15,15 +15,13 @@ class CreatePasswordsTable extends Migration
     {
         Schema::create('passwords', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('name');
             $table->string('email');
-            $table->string('password');
-            $table->string('role');
+            // $table->string('password');
             $table->integer('created_by')->nullable($value = true);
             $table->integer('deleted_by')->nullable($value = true);
             $table->string('token');
-            $table->string('verify_status');
-            $table->timestamp('email_verified_at')->nullable();
+            $table->string('reset_status');
+            // $table->timestamp('email_verified_at')->nullable();
             $table->timestamps();
         });
     }

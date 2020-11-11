@@ -12,7 +12,7 @@ use Illuminate\Mail\Mailable;
 
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
+class Forgot extends Model implements AuthenticatableContract, AuthorizableContract,JWTSubject
 {
     use Authenticatable, Authorizable;
 
@@ -22,7 +22,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      * @var array
      */
     protected $fillable = [
-        'name', 'email','role'
+         'email',
     ];
 
     /**
@@ -32,16 +32,10 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
      */
 
     protected $hidden = [
-        'password','token'
+        'token','created_at','updated_at'
     ];
-    //user model can have any no of tasks.
-    public function tasks(){
-        return $this->hasMany(Task::class);
-    }
-    public function tasks1(){
-        return $this->hasMany(Task::class,'assignee');
-    }
-   
+  
+    
     public function getJWTIdentifier()
     {
         return $this->getKey();
@@ -52,7 +46,8 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     {
         return [];
     }
-
+    
+    protected $table= 'passwords';
     
 
 }
